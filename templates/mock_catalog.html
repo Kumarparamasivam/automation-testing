@@ -1,0 +1,51 @@
+{% extends "mock_layout.html" %}
+
+{% block title %}Catalog - Mock Store{% endblock %}
+
+{% block content %}
+<h2>Mock Product Catalog</h2>
+<p style="color: var(--text-secondary); margin-bottom: 2rem;">Search, click items, and build your cart. Session is fully local.</p>
+
+<!-- Search Bar -->
+<form action="{{ url_for('mock_catalog') }}" method="GET" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+    <input type="text" id="search-box" name="q" placeholder="Search products (e.g. Laptop, Smartphone, Keyboard)..." value="{{ query or '' }}" style="flex: 1;">
+    <button type="submit" id="search-btn" class="btn" style="width: auto; padding: 0.75rem 2rem;">Search</button>
+</form>
+
+{% if query %}
+    <p style="margin-bottom: 1.5rem;">Showing results for: "<strong>{{ query }}</strong>" <a href="{{ url_for('mock_catalog') }}" style="margin-left: 1rem; font-size: 0.875rem; color: var(--danger)">Clear Search</a></p>
+{% endif %}
+
+<!-- Product Grid -->
+{% if products %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem;">
+        {% for prod in products %}
+            <div class="product-card" style="background: white; border: 1px solid var(--border); border-radius: 0.5rem; padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div>
+                    <div style="height: 120px; background-color: #f3f4f6; border-radius: 0.375rem; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin-bottom: 1rem;">
+                        {{ prod.icon }}
+                    </div>
+                    <h3 class="product-name" style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">{{ prod.name }}</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0 0 1rem 0;">{{ prod.desc }}</p>
+                </div>
+                <div>
+                    <div style="font-size: 1.25rem; font-weight: bold; color: var(--primary); margin-bottom: 1rem;">
+                        ${{ "%.2f"|format(prod.price) }}
+                    </div>
+                    
+                    <form action="{{ url_for('mock_add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ prod.id }}">
+                        <button type="submit" class="add-to-cart-btn btn" style="padding: 0.5rem;">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="no-products-msg" style="text-align: center; padding: 3rem; border: 2px dashed var(--border); border-radius: 0.5rem; background: white;">
+        <span style="font-size: 3rem;">🔍</span>
+        <h3 style="margin-top: 1rem;">No matching products found</h3>
+        <p style="color: var(--text-secondary);">Try searching for something else like "Laptop", "Phone", or "Headphones".</p>
+    </div>
+{% endif %}
+{% endblock %}

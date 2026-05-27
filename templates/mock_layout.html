@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mock Store{% endblock %}</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #f9fafb;
+            --surface: #ffffff;
+            --text: #111827;
+            --text-secondary: #4b5563;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .cart-badge-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #cart-count {
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 0.25rem 0.5rem;
+            position: absolute;
+            top: -10px;
+            right: -15px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:disabled {
+            background-color: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .error-message, .error-list {
+            color: var(--danger);
+            background-color: #fef2f2;
+            border: 1px solid #fee2e2;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .success-banner, .signup-success {
+            color: var(--success);
+            background-color: #ecfdf5;
+            border: 1px solid #d1fae5;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('mock_catalog') }}" class="logo">🛒 QuickShop Mock Store</a>
+        <nav>
+            <a href="{{ url_for('mock_catalog') }}">Catalog</a>
+            <a href="{{ url_for('mock_ui_validation') }}">UI/CSS Validation</a>
+            <a href="{{ url_for('mock_signup') }}">Sign Up</a>
+            <a href="{{ url_for('mock_cart') }}" class="cart-badge-container">
+                Cart <span id="cart-count">{{ session.get('cart', [])|length }}</span>
+            </a>
+            {% if session.get('username') %}
+                <span style="margin-left: 1.5rem; font-weight: bold; color: var(--primary);">Hi, {{ session.get('username') }}</span>
+                <a href="{{ url_for('mock_logout') }}" id="logout-btn" style="color: var(--danger)">Log Out</a>
+            {% else %}
+                <a href="{{ url_for('mock_login') }}" id="login-btn-nav">Log In</a>
+            {% endif %}
+            <a href="{{ url_for('index') }}" style="border-left: 1px solid var(--border); padding-left: 1rem; color: #6b7280;">⬅ Back to Dashboard</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

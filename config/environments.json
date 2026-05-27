@@ -1,0 +1,12 @@
+{
+  "local_mock": {
+    "base_url": "http://127.0.0.1:5000",
+    "timeout": 5000,
+    "slow_mo": 200
+  },
+  "production": {
+    "base_url": "https://example.com",
+    "timeout": 15000,
+    "slow_mo": 0
+  }
+}

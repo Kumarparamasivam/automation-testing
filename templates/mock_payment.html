@@ -1,0 +1,62 @@
+{% extends "mock_layout.html" %}
+
+{% block title %}Payment - Mock Store{% endblock %}
+
+{% block content %}
+<div style="max-width: 550px; margin: 2rem auto;">
+    <h2>Mock Payment Terminal</h2>
+    
+    {% if success %}
+        <div class="card" style="text-align: center; border-color: var(--success); padding: 3rem 2rem;">
+            <span style="font-size: 4rem; color: var(--success);">✅</span>
+            <h2 id="payment-success-header" style="color: var(--success); margin-top: 1rem;">Payment Successful!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Your mock transaction has been successfully processed.</p>
+            
+            <div style="background-color: #f3f4f6; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 2.5rem; border: 1px solid var(--border);">
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.25rem;">YOUR MOCK ORDER NUMBER</div>
+                <div id="order-number" style="font-size: 1.75rem; font-weight: bold; color: var(--text); letter-spacing: 1px;">{{ order_id }}</div>
+            </div>
+            
+            <a href="{{ url_for('mock_catalog') }}" class="btn">Return to Catalog</a>
+        </div>
+    {% else %}
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Enter credit card info. Card number must be 16 digits, Expiry MM/YY, and CVV 3 digits.</p>
+
+        <div class="card">
+            {% if error %}
+                <div id="payment-error" class="error-message">{{ error }}</div>
+            {% endif %}
+            
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <span style="font-weight: 500;">Payable Amount:</span>
+                <span style="font-weight: bold; color: var(--primary); font-size: 1.25rem;">${{ "%.2f"|format(total) }}</span>
+            </div>
+
+            <form action="{{ url_for('mock_payment') }}" method="POST">
+                <div class="form-group">
+                    <label for="card-name">Cardholder Name</label>
+                    <input type="text" id="card-name" name="card_name" placeholder="John Doe" required autocomplete="cc-name">
+                </div>
+
+                <div class="form-group">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" name="card_number" placeholder="16-digit card number" required autocomplete="cc-number">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="card-expiry">Expiration Date</label>
+                        <input type="text" id="card-expiry" name="card_expiry" placeholder="MM/YY" required autocomplete="cc-exp">
+                    </div>
+                    <div class="form-group">
+                        <label for="card-cvv">CVV</label>
+                        <input type="password" id="card-cvv" name="card_cvv" placeholder="3 digits" required autocomplete="cc-csc">
+                    </div>
+                </div>
+
+                <button type="submit" id="pay-btn" class="btn" style="margin-top: 1rem;">Pay Now</button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
